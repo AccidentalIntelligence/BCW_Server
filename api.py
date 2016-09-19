@@ -7,8 +7,18 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 import MySQLdb
 import logging
 
+from ..api_helper import *
+
 # Connector. Change here to change remote service.
 import connectors.outpan as connector
+
+# check config can be loaded
+try:
+    import config
+    has_config = True
+except ImportError:
+    has_config = False
+    logging.debug("Cannot load config for the Weather API. The API will not function.")
 
 # Import dictionaries to format location names
 #from states import states
@@ -105,6 +115,9 @@ def buildScanResponse(data):
 @set_headers({'Content-Type':'application/json'})
 @register_api("code")
 def getScanResponse(query):
+    global has_config
+    if not has_config:
+        return '{"error":"BCW API Not configured!"}'
     # Valid query string: c=barcode
     result = [];
     if query == "":
