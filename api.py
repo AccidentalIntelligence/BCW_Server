@@ -102,7 +102,8 @@ def buildScanResponse(data):
 
 
 #####[ API Functions ]####################
-
+@set_headers({'Content-Type':'application/json'})
+@register_api("code")
 def getScanResponse(query):
     # Valid query string: c=barcode
     result = [];
